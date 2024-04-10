@@ -48,13 +48,32 @@ def division_of_polynomials(polynom_dividend: sympy.Poly, polynom_divider: sympy
     polynom_divider = sympy.poly(polynom_divider, symbol_x, domain='GF(2)')
     polynom_quotient, polynom_remainder = sympy.div(polynom_dividend, polynom_divider, symbol_x)
     return polynom_quotient, polynom_remainder
+def checking_the_polynomial_generation_line(string_polynom_generating: str) -> bool:
+    '''Проверка корректности вводимой строки генерации полинома'''
+    list_checking = string_polynom_generating.split(' ')
+    print(list_checking)
+    if (len(list_checking) - 1) % 2 != 0:
+        print(1)
+        return False
+    else:
+        for int_index, string_element in enumerate(list_checking):
+            if int_index % 2 == 0 or int_index == 0:
+                if string_element in ['x', '1']: pass
+                elif re.fullmatch('x\*\*\d', string_element): pass
+                else:
+                    print(2)
+                    return False
+            elif string_element != '+':
+                print(3)
+                return False
+        return True
 
 bool_polynom_choise = bool(int(input('Введите 1, в случае ввода полинома: ')))
 symbol_x = sympy.symbols('x')
 if bool_polynom_choise:
     int_code_subwords_length = int(input('Введите длину кодовых подслов: '))
     string_polynom_generating = input('Введите порождающий полином: ')
-    if re.fullmatch('(x\*\*\d \+ )*x?( \+ )?1?', string_polynom_generating) and len(string_polynom_generating) != 0:
+    if checking_the_polynomial_generation_line(string_polynom_generating) and len(string_polynom_generating) != 0:
         if string_polynom_generating in ['x', '1']:
             print('Некорректный ввод.')
             exit(666)
